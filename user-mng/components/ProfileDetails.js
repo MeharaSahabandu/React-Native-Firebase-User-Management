@@ -10,11 +10,15 @@ export default function ProfileDetails() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
-  const route = useRoute(); 
+  const route = useRoute();
+
+  // Access the user ID from the route parameters
+  const userId = route.params?.userId;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docRef = doc(db, "users", "AJ9Gdgl68XcI5lboIW8J");
+        const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -29,13 +33,12 @@ export default function ProfileDetails() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
-  useEffect(() => {
-    if (route.params?.fromProfile) {
-      showProfileUpdatedToast();
-    }
-  }, [route.params]);
+  const handleEditProfile = () => {
+    // Navigate to the Profile component and pass the userId as a parameter
+    navigation.navigate("Profile", { userId });
+  };
 
   const showProfileUpdatedToast = () => {
     Toast.show({
@@ -44,7 +47,8 @@ export default function ProfileDetails() {
       text1: "Profile Updated",
       visibilityTime: 3000,
       onShow: () => {
-        window.location.reload();
+        // Pass 'profileUpdated' as true when navigating back to Profile
+        navigation.navigate("Profile", { userId, profileUpdated: true });
       },
     });
   };
@@ -53,14 +57,14 @@ export default function ProfileDetails() {
     <View style={styles.container}>
       <Text style={styles.topicReg}>
         <b>Hi, {name}</b>
-      </Text><br/><br/>
+      </Text>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Name:</Text>
         <TextInput
           value={name}
           style={[styles.input, styles.inputWidth]}
-          editable={false} 
-          selectable={false} 
+          editable={false}
+          selectable={false}
         />
       </View>
       <View style={styles.labelContainer}>
@@ -68,8 +72,8 @@ export default function ProfileDetails() {
         <TextInput
           value={email}
           style={[styles.input, styles.inputWidth]}
-          editable={false} 
-          selectable={false} 
+          editable={false}
+          selectable={false}
         />
       </View>
       <View style={styles.labelContainer}>
@@ -77,18 +81,18 @@ export default function ProfileDetails() {
         <TextInput
           value={phone}
           style={[styles.input, styles.inputWidth]}
-          editable={false} 
-          selectable={false} 
+          editable={false}
+          selectable={false}
         />
-      </View><br/><br/>
+      </View>
       <View style={[styles.button, styles.inputWidth]}>
-        <Text onPress={() => navigation.navigate("Profile")} style={styles.buttonText}>
+        <Text onPress={handleEditProfile} style={styles.buttonText}>
           <b>Edit Profile Data</b>
         </Text>
       </View>
       <View style={[styles.button, styles.inputWidth]}>
-        <Text style={styles.buttonText} >
-          <b>Delete Profile</b>
+        <Text style={styles.buttonText} onPress={showProfileUpdatedToast}>
+          <b>Save Changes</b>
         </Text>
       </View>
       <Toast ref={(ref) => Toast.setRef(ref)} />

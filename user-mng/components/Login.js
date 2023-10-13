@@ -9,18 +9,27 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+
   const handleLogin = async () => {
     const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
     const querySnapshot = await getDocs(q);
+
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
       console.log("User Data:", userData);
-      setUserData(userData);
+      
+      // Log the document ID
+      const userId = userDoc.id;
+      console.log("Document ID:", userId);
+
+      // Navigate to ProfileDetails with the user ID as a parameter
+      navigation.navigate("ProfileDetails", { userId });
     } else {
       console.log("User not found.");
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={[styles.topicRegT, { opacity: 0.5 }]}>ticketX</Text><br/><br/><br/><br/>
@@ -50,11 +59,11 @@ export default function Login() {
           <Text>Email: {userData.email}</Text>
           <Text>Phone: {userData.phone}</Text>
         </View>
-        
       )}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -93,8 +102,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "black",
-    alignItems:"center",
-    marginTop:"1%",
+    alignItems: "center",
+    marginTop: "1%",
     textAlign: "center",
     paddingTop: 10,
   },

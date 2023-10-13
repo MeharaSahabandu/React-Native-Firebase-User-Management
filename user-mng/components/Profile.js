@@ -3,18 +3,22 @@ import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
-  
+  const route = useRoute();
+
+  // Access the userId parameter from the route
+  const userId = route.params?.userId;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docRef = doc(db, "users", "AJ9Gdgl68XcI5lboIW8J");
+        const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -27,23 +31,40 @@ export default function Profile() {
         console.error("Error fetching user data: ", error);
       }
     };
+
     fetchData();
-  }, []);
+  }, [userId]);
+
+  // Use this useEffect to trigger a page reload when 'profileUpdated' is true
+  useEffect(() => {
+    if (route.params?.profileUpdated) {
+      // Reload the page to get the latest data
+      window.location.reload();
+    }
+  }, [route.params?.profileUpdated]);
 
   const handleUpdate = () => {
-    updateDoc(doc(db, "users", "AJ9Gdgl68XcI5lboIW8J"), {
+    updateDoc(doc(db, "users", userId), {
       name: name,
       email: email,
       phone: phone,
     })
       .then(() => {
         showToast("User Details Updated Successfully");
-        navigation.navigate("ProfileDetails", { fromProfile: true }); // Pass parameter
+  
+        // Pass the updated user data as parameters to ProfileDetails
+        navigation.navigate("ProfileDetails", {
+          userId,
+          updatedName: name,
+          updatedEmail: email,
+          updatedPhone: phone,
+        });
       })
       .catch((error) => {
         console.error("Error updating user data: ", error);
       });
   };
+  
 
   const showToast = (message) => {
     Toast.show({
@@ -95,10 +116,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  image: {
-    width: 50,
-    height: 0,
-  },
   topicReg: {
     color: "black",
     fontSize: 30,
@@ -114,9 +131,6 @@ const styles = StyleSheet.create({
   },
   inputWidth: {
     width: "80%",
-  },
-  whiteText: {
-    color: "black",
   },
   button: {
     width: "80%",
