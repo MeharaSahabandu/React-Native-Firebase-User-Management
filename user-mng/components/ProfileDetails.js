@@ -13,7 +13,6 @@ export default function ProfileDetails() {
       try {
         const docRef = doc(db, "users", "AJ9Gdgl68XcI5lboIW8J");
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setName(userData.name);
@@ -32,31 +31,35 @@ export default function ProfileDetails() {
       <Text style={styles.topicReg}>
         <b>{name}</b>
       </Text>
-      <br /> <br />
-      <TextInput
-        value={name}
-        placeholder="Name"
-        style={[styles.input, styles.inputWidth]}
-        editable={false} // Make the field non-editable
-        selectable={false} // Disable cursor and selection
-      />
-      <br /> <br />
-      <TextInput
-        value={email}
-        placeholder="Email"
-        style={[styles.input, styles.inputWidth]}
-        editable={false} // Make the field non-editable
-        selectable={false} // Disable cursor and selection
-      />
-      <br /> <br />
-      <TextInput
-        value={phone}
-        placeholder="Phone Number"
-        style={[styles.input, styles.inputWidth]}
-        editable={false} // Make the field non-editable
-        selectable={false} // Disable cursor and selection
-      />
-      <br /> <br />
+      <br /> <br /><br/><br/>
+      <View style={styles.labelContainer}>
+        <Text style={styles.label}>Name:</Text>
+        <TextInput
+          value={name}
+          style={[styles.input, styles.inputWidth]}
+          editable={false} 
+          selectable={false} 
+        />
+      </View><br/>
+      <View style={styles.labelContainer}>
+        <Text style={styles.label}>Email:</Text>
+        <TextInput
+          value={email}
+          style={[styles.input, styles.inputWidth]}
+          editable={false} 
+          selectable={false} 
+        />
+      </View><br/>
+      <View style={styles.labelContainer}>
+        <Text style={styles.label}>Phone Number:</Text>
+        <TextInput
+          value={phone}
+          style={[styles.input, styles.inputWidth]}
+          editable={false} 
+          selectable={false} 
+        />
+      </View><br/>
+      <br /><br/>
       <View style={[styles.button, styles.inputWidth]}>
         <Text style={styles.buttonText}>
           <b>Edit Profile Data</b>
@@ -80,9 +83,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  image: {
-    width: 50,
-    height: 0,
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  label: {
+    color: "black",
+    width: 120, 
   },
   topicReg: {
     color: "black",
