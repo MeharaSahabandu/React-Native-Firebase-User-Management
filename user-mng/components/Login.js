@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./config.jsx";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState(null);
+  const navigation = useNavigation();
   const handleLogin = async () => {
     const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
     const querySnapshot = await getDocs(q);
@@ -40,14 +42,15 @@ export default function Login() {
         <Text style={styles.buttonText} onPress={handleLogin}><b>Login</b></Text>
       </View><br/>
       <Text style={styles.whiteText}>Don't have an account?</Text><br/>
-      <Text style={styles.whiteText}><b>Register</b></Text>
+      <Text onPress={() => navigation.navigate("Register")} style={styles.whiteText}><b>Register</b></Text>
       {userData && (
         <View>
-          <Text>User Data:</Text>
+          <Text>Login Successfully</Text>
           <Text>Name: {userData.name}</Text>
           <Text>Email: {userData.email}</Text>
           <Text>Phone: {userData.phone}</Text>
         </View>
+        
       )}
     </View>
   );

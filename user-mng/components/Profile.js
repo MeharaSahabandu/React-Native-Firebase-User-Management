@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import {collection, doc, getDoc,updateDoc} from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
+
 export default function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const navigation = useNavigation();
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,6 +29,7 @@ export default function Profile() {
     };
     fetchData();
   }, []);
+
   const handleUpdate = () => {
     updateDoc(doc(db, "users", "AJ9Gdgl68XcI5lboIW8J"), {
       name: name,
@@ -33,11 +38,13 @@ export default function Profile() {
     })
       .then(() => {
         showToast("User Details Updated Successfully");
+        navigation.navigate("ProfileDetails", { fromProfile: true }); // Pass parameter
       })
       .catch((error) => {
         console.error("Error updating user data: ", error);
       });
   };
+
   const showToast = (message) => {
     Toast.show({
       type: "success",
@@ -46,6 +53,7 @@ export default function Profile() {
       visibilityTime: 3000,
     });
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.topicReg}>
@@ -94,7 +102,7 @@ const styles = StyleSheet.create({
   topicReg: {
     color: "black",
     fontSize: 30,
-    marginTop: "-65%",
+    marginTop: "-15%",
   },
   input: {
     height: 50,

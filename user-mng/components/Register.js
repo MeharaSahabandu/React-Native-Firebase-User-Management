@@ -4,11 +4,13 @@ import { collection, addDoc } from "firebase/firestore";
 import { useState } from "react";
 import { db } from "./config";
 import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const navigation = useNavigation();
   const [password, setPassword] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -115,8 +117,8 @@ export default function Register() {
           <b>Register</b>
         </Text>
       </TouchableOpacity><br/><br/>
-      <Text style={styles.whiteText}>Already have an account?</Text>
-      <Text style={styles.whiteText}>
+      <Text style={styles.whiteText}>Already have an account?</Text><br/>
+      <Text style={styles.whiteText} onPress={() => navigation.navigate("Login")} >
         <b>Login</b>
       </Text>
       <Toast ref={(ref) => Toast.setRef(ref)} />
