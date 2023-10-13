@@ -64,8 +64,8 @@ export default function Register() {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.topicReg}>ticketX</Text><br/><br/>
-      <Text style={styles.topicReg}>Register</Text><br/><br/>
+      <Text style={[styles.topicRegT, { opacity: 0.5 }]}>ticketX</Text><br/><br/>
+      <Text style={styles.topicReg}><b>Register</b></Text><br/><br/>
       <TextInput
         value={name}
         onChangeText={(name) => {
@@ -102,11 +102,11 @@ export default function Register() {
           setPassword(password);
         }}
         placeholder="Password"
-        secureTextEntry={true} // Hide password
+        secureTextEntry={true} 
         style={[styles.input, styles.inputWidth]}
       />
       {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-      <br/>
+      <br/><br/>
       <TouchableOpacity
         style={[styles.button, styles.inputWidth]}
         onPress={handleRegister}
@@ -130,6 +130,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     alignItems: "center",
     justifyContent: "center",
+  },
+  topicRegT: {
+    color: "white",
+    fontSize: 65, // Increased font size to 65
+    marginTop: "-20%",
   },
   topicReg: {
     color: "white",
